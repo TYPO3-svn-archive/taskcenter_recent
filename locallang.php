@@ -1,0 +1,109 @@
+<?php
+
+$LOCAL_LANG = Array (
+	'default' => Array (
+		'recent_allRecs' => 'Most recently edited records',
+		'mod_recent' => 'Recent Pages',
+	),
+	'dk' => Array (
+		'recent_allRecs' => 'Elementer, som er ændret for nyligt',
+		'mod_recent' => 'Seneste sider',
+	),
+	'de' => Array (
+		'recent_allRecs' => 'Häufig bearbeitete Datensätze',
+		'mod_recent' => 'Letzte Seiten',
+	),
+	'no' => Array (
+		'recent_allRecs' => 'Sist endrede elementer',
+		'mod_recent' => 'Siste sider',
+	),
+	'it' => Array (
+		'recent_allRecs' => 'Record modificati di recente',
+		'mod_recent' => 'Pagine modificate di recente',
+	),
+	'fr' => Array (
+		'recent_allRecs' => 'Enregistrements modifiés dernièrement',
+		'mod_recent' => 'Pages récentes',
+	),
+	'es' => Array (
+		'recent_allRecs' => 'Registros editados mas recientemente',
+		'mod_recent' => 'Páginas recientes',
+	),
+	'nl' => Array (
+		'recent_allRecs' => 'Onlangs aangepaste records',
+		'mod_recent' => 'Recente pagina\'s',
+	),
+	'cz' => Array (
+		'recent_allRecs' => 'NAposled editované stránky',
+		'mod_recent' => 'Poslední stránky',
+	),
+	'pl' => Array (
+		'recent_allRecs' => 'Ostatnio edytowane rekordy',
+		'mod_recent' => 'Ostatnie strony',
+	),
+	'si' => Array (
+		'recent_allRecs' => 'Nedavno urejani zapisi',
+		'mod_recent' => 'Nedavno urejane strani',
+	),
+	'fi' => Array (
+		'recent_allRecs' => 'Viimeksi muotoillut tietueet',
+		'mod_recent' => 'Viimeisimmät sivut',
+	),
+	'tr' => Array (
+		'recent_allRecs' => 'Son zamanlarda düzenlenen kayýtlar',
+		'mod_recent' => 'Yakýnda olmuþ Sayfalar',
+	),
+	'se' => Array (
+		'recent_allRecs' => 'Senast ändrade sidor',
+		'mod_recent' => 'Senaste sidor',
+	),
+	'pt' => Array (
+		'recent_allRecs' => 'Registos editados recentemente',
+		'mod_recent' => 'Páginas Recentes',
+	),
+	'ru' => Array (
+		'recent_allRecs' => 'Íåäàâíî èçìåíåííûå ýëåìåíòû',
+		'mod_recent' => 'Ïîñëåäíèå ñòðàíèöû',
+	),
+	'ro' => Array (
+	),
+	'ch' => Array (
+	),
+	'sk' => Array (
+		'recent_allRecs' => 'Naposledy editované stránky',
+		'mod_recent' => 'Posledné stránky',
+	),
+	'lt' => Array (
+	),
+	'is' => Array (
+	),
+	'hr' => Array (
+		'recent_allRecs' => 'Najskorije izmjenjeni zapisi',
+		'mod_recent' => 'Nedavno ureðivane stranice',
+	),
+	'hu' => Array (
+	),
+	'gl' => Array (
+	),
+	'th' => Array (
+	),
+	'gr' => Array (
+	),
+	'hk' => Array (
+	),
+	'eu' => Array (
+	),
+	'bg' => Array (
+	),
+	'br' => Array (
+	),
+	'et' => Array (
+	),
+	'ar' => Array (
+	),
+	'he' => Array (
+	),
+	'ua' => Array (
+	),
+);
+?>
