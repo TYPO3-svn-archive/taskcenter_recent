@@ -4,6 +4,7 @@ $LOCAL_LANG = Array (
 	'default' => Array (
 		'recent_allRecs' => 'Most recently edited records',
 		'mod_recent' => 'Recent Pages',
+		'link_allRecs' => 'List recently edited records',
 	),
 	'dk' => Array (
 		'recent_allRecs' => 'Elementer, som er ændret for nyligt',

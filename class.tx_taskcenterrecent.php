@@ -64,6 +64,9 @@ class tx_taskcenterrecent extends mod_user_task {
 				$lines[]='<nobr>'.t3lib_iconworks::getIconImage('pages',$pageRow,$this->backPath,'hspace="2" align="top" title="'.htmlspecialchars($path).' - '.t3lib_BEfunc::titleAttribForPages($pageRow,"",0).'"').$this->recent_linkLayoutModule($this->fixed_lgd($pageRow["title"]),$pageRow["uid"]).'</nobr><br />';
 			}
 		}
+		$lines[] = $this->recent_linkLayoutModule('<em>'.$LANG->getLL('link_allRecs').'</em>','').'</nobr><br />';;
+
+
 		$out = implode("",$lines);
 		
 		return $out;
@@ -75,11 +78,11 @@ class tx_taskcenterrecent extends mod_user_task {
 	}
 	function _renderRecent()	{
 		global $LANG, $TCA;
-// 		if($id = t3lib_div::_GP('display')) {
-// 			return $this->urlInIframe($this->backPath.'sysext/cms/layout/db_layout.php?id='.$id,1);
-// 		} else {
+ 		if($id = t3lib_div::_GP('display')) {
+ 			return $this->urlInIframe($this->backPath.'sysext/cms/layout/db_layout.php?id='.$id,1);
+ 		} else {
 			$id = t3lib_div::_GP('display');
-			$iframe .= $this->urlInIframe($this->backPath.'sysext/cms/layout/db_layout.php?id='.$id);
+			$iframe .= $this->urlInIframe('');
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 						'sys_log.*, max(sys_log.tstamp) AS tstamp_MAX', 
 						'sys_log,pages', 
@@ -101,8 +104,9 @@ class tx_taskcenterrecent extends mod_user_task {
 					<td class="bgColor4">'.$this->recent_linkEdit(t3lib_iconworks::getIconImage($row['tablename'],$elRow,$this->backPath,'class="c-recicon" title="'.htmlspecialchars($path).'"').htmlspecialchars($this->fixed_lgd($elRow[$TCA[$row['tablename']]['ctrl']['label']])),$row['tablename'],$row['recuid']).'&nbsp;</td>
 					<td class="bgColor4">'.$this->dateTimeAge($row['tstamp_MAX']).'</td>
 				</tr>';
+				}
 			}
-		}
+
 			$out = implode('',$lines);
 			$out = '
 		
@@ -114,7 +118,7 @@ class tx_taskcenterrecent extends mod_user_task {
 			'.$out.'
 		</table>';
 			return $out.$iframe;
-// 		}
+ 		}
 	}
 	function recent_linkLayoutModule($str,$id)	{
 		$str = '<a href="index.php?SET[function]=tx_taskcenterrecent&display='.$id.'" onClick="this.blur();">'.$str.'</a>';
@@ -123,9 +127,9 @@ class tx_taskcenterrecent extends mod_user_task {
 		return $str;
 	}
 	function recent_linkEdit($str,$table,$id)	{
-#		$params = '&edit['.$table.']['.$id.']=edit';
-		$str = '<a href="index.php?SET[function]=tx_taskcenterrecent&display='.$id.'" onClick="this.blur();">'.$str.'</a>';
-#		$str='<a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::editOnClick($params,$GLOBALS['BACK_PATH'])).'">'.$str.'</a>';
+		$params = '&edit['.$table.']['.$id.']=edit';
+#		$str = '<a href="index.php?SET[function]=tx_taskcenterrecent&display='.$id.'" onClick="this.blur();">'.$str.'</a>';
+		$str='<a href="#" onclick="list_frame.'.htmlspecialchars(t3lib_BEfunc::editOnClick($params,$GLOBALS['BACK_PATH'],'dummy.php')).'">'.$str.'</a>';
 		return $str;
 	}
 	function getRecentResPointer($be_user_id)	{
