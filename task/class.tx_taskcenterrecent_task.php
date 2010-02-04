@@ -69,7 +69,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 	// @todo: rename
 	protected function _renderRecent() {
-		$out = $iframe = '';
+		$content = $iframe = '';
 		$id = intval(t3lib_div::_GP('display'));
 		if($id > 0) {
 			// @todo: fix path
@@ -82,7 +82,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 				// get the documents of a different user
 				// todo: add label
-			$out .= $this->getUserSelection();
+			$content .= $this->getUserSelection();
 			$userId = ($GLOBALS['BE_USER']->isAdmin() && intval(t3lib_div::_GP('user')) > 0) ? intval(t3lib_div::_GP('user')) : $GLOBALS['BE_USER']->user['uid'];
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -127,18 +127,29 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 
-				// build the table
-			$out .= '<table style="width:100%" id="record-table" border="0" cellpadding="1" cellspacing="1" class="typo3-recent-edited">
-						<thead>
-							<tr class="bgColor5">
-								<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_general.xml:LGL.title') . '</th>
-								<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_mod_file_list.xml:c_tstamp') . '</th>
-							</tr>
-						</thead>
-						' . implode('', $lines) . '
-					</table>';
+			if (count($lines) > 0) {
 
-			return $out.$iframe;
+					// build the table
+				$content .= '<table style="width:100%" id="record-table" border="0" cellpadding="1" cellspacing="1" class="typo3-recent-edited">
+							<thead>
+								<tr class="bgColor5">
+									<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_general.xml:LGL.title') . '</th>
+									<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_mod_file_list.xml:c_tstamp') . '</th>
+								</tr>
+							</thead>
+							' . implode('', $lines) . '
+						</table>';
+			} else {
+				$flashMessage = t3lib_div::makeInstance (
+					't3lib_FlashMessage',
+					$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.noRecordFound'),
+					$GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_mod_tools_em.xml:details_info'),
+					t3lib_FlashMessage::INFO
+				);
+				$content .= '<br />' . $flashMessage->render();
+			}
+
+			return $content . $iframe;
 		}
 	}
 
@@ -155,13 +166,17 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 		unset($users[$GLOBALS['BE_USER']->user['uid']]);
 
 		if (count($users) > 0) {
-			$out .= '<form action="" method="post"><select name="user" onchange="this.form.submit();">
-						<option value="0"></option>';
+			$out .= '<form action="" method="post">
+						<label for="select_user">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:cm.select') . '</label>
+						<select id="select_user" name="user" onchange="this.form.submit();">
+							<option value="0"></option>';
+
 			foreach($users as $id => $user) {
 				$selected = (t3lib_div::_GP('user') == $id) ? ' selected="selected" ' : '';
 				$out .= '<option value="' . $id . '"' . $selected . '>' . htmlspecialchars($user['username']) . '</option>';
 			}
-			$out .= '</select></form>';
+			
+			$out .= '</select></form><br />';
 		}
 
 		return $out;
