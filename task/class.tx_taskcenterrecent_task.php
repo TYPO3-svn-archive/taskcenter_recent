@@ -83,12 +83,37 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 				// get the documents of a different user
 				// todo: add label
 			$content .= $this->getUserSelection();
-			$userId = ($GLOBALS['BE_USER']->isAdmin() && intval(t3lib_div::_GP('user')) > 0) ? intval(t3lib_div::_GP('user')) : $GLOBALS['BE_USER']->user['uid'];
+			
+				// extend where clause
+			if ($GLOBALS['BE_USER']->isAdmin()) {
+				$selectUsers = array();
+				$selUser = t3lib_div::_GP('user');
+
+				if (substr($selUser, 0, 3) == 'gr-') {	// groups
+					$where = ' AND ' . $GLOBALS['TYPO3_DB']->listQuery('usergroup_cached_list', intval(substr($selUser,3)), 'be_users');
+					$records = t3lib_BEfunc::getUserNames('username,uid', $where);
+					foreach ($records as $record) {
+						$selectUsers[] = $record['uid'];
+					}
+					$selectUsers[] = 0;
+					$this->logWhere.= ' AND sys_log.userid IN (' . implode($selectUsers, ',') . ')';
+				} elseif (substr($selUser,0,3) == 'us-')	{	// users
+					$selectUsers[] = intval(substr($selUser,3));
+					$this->logWhere.= ' AND sys_log.userid in ('.implode($selectUsers,',').')';
+				} elseif ($selUser == -1) {
+					// do nothing, any user
+				} else {
+					$this->logWhere .= ' AND sys_log.userid=' . $GLOBALS['BE_USER']->user['uid'];	// Self user
+				}
+
+			} else {
+				$this->logWhere .= ' AND sys_log.userid=' . $GLOBALS['BE_USER']->user['uid'];	// Self user
+			}
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'sys_log.*, max(sys_log.tstamp) AS tstamp_MAX',
 				'sys_log,pages',
-				'pages.uid=sys_log.event_pid AND sys_log.userid=' . $userId . $this->logWhere .
+				'pages.uid=sys_log.event_pid ' . $this->logWhere .
 				' AND ' . $this->taskObject->perms_clause,
 				'tablename,recuid',
 				'tstamp_MAX DESC',
@@ -154,7 +179,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 	}
 
 	protected function getUserSelection() {
-		$out = '';
+		$out = $options = '';
 
 			// restricted to admins only
 		if (!$GLOBALS['BE_USER']->isAdmin()) {
@@ -163,21 +188,35 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 			// get all users and remove own record
 		$users = t3lib_BEfunc::getUserNames();
+		$titlePrefix = $GLOBALS['LANG']->sL('LLL:EXT:belog/mod/locallang.xml:users') . ' ';
+		$options .= '<option disabled="disabled">' . $titlePrefix . '</option>';
 		unset($users[$GLOBALS['BE_USER']->user['uid']]);
-
-		if (count($users) > 0) {
-			$out .= '<form action="" method="post">
-						<label for="select_user">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:cm.select') . '</label>
-						<select id="select_user" name="user" onchange="this.form.submit();">
-							<option value="0"></option>';
-
-			foreach($users as $id => $user) {
-				$selected = (t3lib_div::_GP('user') == $id) ? ' selected="selected" ' : '';
-				$out .= '<option value="' . $id . '"' . $selected . '>' . htmlspecialchars($user['username']) . '</option>';
-			}
-			
-			$out .= '</select></form><br />';
+		foreach($users as $id => $user) {
+			$id = 'us-' . $id;
+			$selected = (t3lib_div::_GP('user') == $id) ? ' selected="selected" ' : '';
+			$options .= '<option value="' . $id . '"' . $selected . '>' . htmlspecialchars($titlePrefix . $user['username']) . '</option>';
 		}
+
+			// get all user groups
+		$usergroups = t3lib_BEfunc::getGroupNames();
+		$titlePrefix = $GLOBALS['LANG']->sL('LLL:EXT:belog/mod/locallang.xml:userGroup') . ' ';
+		$options .= '<option disabled="disabled">' . $titlePrefix . '</option>';
+		foreach($usergroups as $id => $group) {
+			$id = 'gr-' . $id;
+			$selected = (t3lib_div::_GP('user') == $id) ? ' selected="selected" ' : '';
+			$options .= '<option value="' . $id . '"' . $selected . '>' . htmlspecialchars($titlePrefix . $group['title']) . '</option>';
+		}
+
+		$out .= '<form action="" method="post">
+					<label for="select_user">' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:cm.select') . '</label>
+					<select id="select_user" name="user" onchange="this.form.submit();">
+						<option value="0">' . $GLOBALS['LANG']->sL('LLL:EXT:belog/mod/locallang.xml:self') . '</option>
+						<option value="-1">' . $GLOBALS['LANG']->sL('LLL:EXT:belog/mod/locallang.xml:any') . '</option>' .
+						$options .
+					'</select>
+				</form>
+				<br />';
+
 
 		return $out;
 
