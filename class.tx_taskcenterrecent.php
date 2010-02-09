@@ -64,7 +64,7 @@ class tx_taskcenterrecent extends mod_user_task {
 				$lines[]='<nobr>'.t3lib_iconworks::getIconImage('pages',$pageRow,$this->backPath,'hspace="2" align="top" title="'.htmlspecialchars($path).' - '.t3lib_BEfunc::titleAttribForPages($pageRow,"",0).'"').$this->recent_linkLayoutModule($this->fixed_lgd($pageRow["title"]),$pageRow["uid"]).'</nobr><br />';
 			}
 		}
-		$lines[] = $this->recent_linkLayoutModule('<em>'.$LANG->getLL('link_allRecs').'</em>','').'</nobr><br />';;
+		$lines[] = '<em>' . $this->recent_linkLayoutModule($LANG->getLL('link_allRecs'),'') . '</em></nobr><br />';;
 
 
 		$out = implode("",$lines);
@@ -123,7 +123,7 @@ class tx_taskcenterrecent extends mod_user_task {
 	}
 	function recent_linkLayoutModule($str,$id)	{
 		if (is_a($this->pObj,'SC_mod_user_task_index')) {
-			$str = '<a href="index.php?SET[function]=tx_taskcenterrecent&display='.$id.'" onClick="this.blur();">'.$str.'</a>';
+			$str = '<a href="index.php?SET[function]=tx_taskcenterrecent&display='.$id.'" onClick="this.blur();">'.htmlspecialchars($str).'</a>';
 		} else {
 			$str='<a target="_top" href="'.$this->backPath.'sysext/cms/layout/db_layout.php?id='.$id.'" onClick="this.blur();">'.htmlspecialchars($str).'</a>';
 		}
