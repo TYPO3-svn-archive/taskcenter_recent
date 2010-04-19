@@ -111,15 +111,17 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			}
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'sys_log.*, max(sys_log.tstamp) AS tstamp_MAX',
-				'sys_log,pages',
-				'pages.uid=sys_log.event_pid ' . $this->logWhere .
+				'sys_log.tablename, sys_log.recuid, MAX(sys_log.tstamp) AS tstamp_MAX',
+				'sys_log INNER JOIN pages ON pages.uid = sys_log.event_pid',
+				'sys_log.userid=' . intval($this->BE_USER->user['uid']) . $this->logWhere .
 				' AND ' . $this->taskObject->perms_clause,
-				'tablename,recuid',
+				'tablename, recuid',
 				'tstamp_MAX DESC',
 				$this->numberOfRecentAll
 			);
 
+
+				
 				// initialize click menu JS
 			$CMparts=$this->taskObject->doc->getContextMenuCode();
 			$this->taskObject->bodyTagAdditions = $CMparts[1];
