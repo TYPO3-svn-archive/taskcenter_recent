@@ -53,7 +53,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 	 */
 	public function __construct(SC_mod_user_task_index $taskObject) {
 		$this->taskObject = $taskObject;
-		$GLOBALS['LANG']->includeLLFile('EXT:taskcenter_recent/locallang.php');
+		$GLOBALS['LANG']->includeLLFile('EXT:taskcenter_recent/locallang.xml');
 	}
 
 	/**
