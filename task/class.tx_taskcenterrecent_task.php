@@ -120,6 +120,10 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 		$id = intval(t3lib_div::_GP('display'));
 		if($id > 0) {
 			$path = $GLOBALS['BACK_PATH'] . 'sysext/cms/layout/db_layout.php?id=' . $id;
+			
+			if (t3lib_extMgm::isLoaded('templavoila')) {
+				$path = $GLOBALS['BACK_PATH'] . t3lib_extMgm::extRelPath('templavoila') . 'mod1/index.php?id=' . $id ;
+			}
 
 			return $this->taskObject->urlInIframe($path, 1);
 		} else {
