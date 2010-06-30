@@ -82,7 +82,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			// get the records of the current user
 		$res = $this->getRecentResPointer($GLOBALS['BE_USER']->user['uid']);
 		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-			$pageRow = t3lib_BEfunc::getRecord('pages', $row['event_pid']);
+			$pageRow = t3lib_BEfunc::getRecordWSOL('pages', $row['event_pid']);
 			if (is_array($pageRow)) {
 				$path	= t3lib_BEfunc::getRecordPath($pageRow['uid'], $this->taskObject->perms_clause, $GLOBALS['BE_USER']->uc['titleLen']);
 				$title	= htmlspecialchars($path) . ' - ' . t3lib_BEfunc::titleAttribForPages($pageRow, '', 0);
@@ -96,17 +96,11 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 			// if any records found
 		if (count($lines) > 0) {
-		#	$lines[] = '<br /><em>' . $this->recent_linkLayoutModule($GLOBALS['LANG']->getLL('link_allRecs'),'').'</em>';
-
 			$out = '<div style="margin:3px"> ' . implode('<br />', $lines) . '</div>';
 		}
 
 		return $out;
 	}
-//	protected function renderRecent() {
-//
-//		return $out;
-//	}
 
 	/**
 	 * Show the recend edited records of a given user or usergroup
@@ -120,7 +114,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 		$id = intval(t3lib_div::_GP('display'));
 		if($id > 0) {
 			$path = $GLOBALS['BACK_PATH'] . 'sysext/cms/layout/db_layout.php?id=' . $id;
-			
+
 			if (t3lib_extMgm::isLoaded('templavoila')) {
 				$path = $GLOBALS['BACK_PATH'] . t3lib_extMgm::extRelPath('templavoila') . 'mod1/index.php?id=' . $id ;
 			}
@@ -134,14 +128,14 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 				// get the records of the requested user
 			$content .= $this->getUserSelection();
-			
+
 				// extend where clause
 			if ($GLOBALS['BE_USER']->isAdmin()) {
 				$selectUsers = array();
 				$selUser = t3lib_div::_GP('user');
 
 					// usergroups
-				if (substr($selUser, 0, 3) == 'gr-') {	
+				if (substr($selUser, 0, 3) == 'gr-') {
 					$where = ' AND ' . $GLOBALS['TYPO3_DB']->listQuery('usergroup_cached_list', intval(substr($selUser,3)), 'be_users');
 					$records = t3lib_BEfunc::getUserNames('username,uid', $where);
 					foreach ($records as $record) {
@@ -149,7 +143,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 					}
 					$selectUsers[] = 0;
 					$this->logWhere.= ' AND sys_log.userid IN (' . implode($selectUsers, ',') . ')';
-				} elseif (substr($selUser,0,3) == 'us-')	{
+				} elseif (substr($selUser,0,3) == 'us-') {
 						// users
 					$selectUsers[] = intval(substr($selUser,3));
 					$this->logWhere.= ' AND sys_log.userid in ('.implode($selectUsers,',').')';
@@ -157,7 +151,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 					// do nothing, any user
 				} else {
 						// own records
-					$this->logWhere .= ' AND sys_log.userid=' . $GLOBALS['BE_USER']->user['uid'];	
+					$this->logWhere .= ' AND sys_log.userid=' . $GLOBALS['BE_USER']->user['uid'];
 				}
 
 			} else {
@@ -208,14 +202,18 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 					$starttime = mktime (0,0,0)-31*3600*24;
 				break;
 			}
-			if ($starttime > 0)	{
+			if ($starttime > 0) {
 				$this->logWhere .= ' AND sys_log.tstamp >= ' . $starttime . ' AND sys_log.tstamp < ' . $endtime;
+			}
+
+			if (t3lib_extMgm::isLoaded('version')) {
+				$this->logWhere .= ' AND pages.t3ver_wsid=' . $GLOBALS['BE_USER']->workspace;
 			}
 				// create the query
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				'sys_log.tablename, sys_log.recuid, MAX(sys_log.tstamp) AS tstamp_MAX',
 				'sys_log INNER JOIN pages ON pages.uid = sys_log.event_pid',
-				'1=1' . $this->logWhere .
+				' 1=1' . $this->logWhere .
 				' AND ' . $this->taskObject->perms_clause,
 				'tablename,recuid',
 				'tstamp_MAX DESC',
@@ -229,10 +227,9 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			$this->taskObject->postCode .= $CMparts[2];
 
 			$lines = array();
-			$zebra = 0;
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					// get the single record
-				$elRow = t3lib_BEfunc::getRecord($row['tablename'], $row['recuid']);
+				$elRow = t3lib_BEfunc::getRecordWSOL($row['tablename'], $row['recuid']);
 
 				if (is_array($elRow)) {
 					$path = t3lib_BEfunc::getRecordPath($elRow['pid'], $this->taskObject->perms_clause, $GLOBALS['BE_USER']->uc['titleLen']);
@@ -249,7 +246,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 						// put it all together
 					$lines[] = '
-				<tr class="' . (($zebra++ % 2 == 0) ? 'bgColor4' : 'bgColor6') . '">
+				<tr class="db_list_normal">
 					<td>' . $recordIcon . $recordTitle . '&nbsp;</td>
 					<td>' . t3lib_BEfunc::dateTimeAge($row['tstamp_MAX']) . '</td>
 				</tr>';
@@ -262,9 +259,9 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			if (count($lines) > 0) {
 
 					// build the table
-				$content .= '<table border="0" cellpadding="1" cellspacing="1" class="styled-table">
+				$content .= '<table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist">
 							<thead>
-								<tr class="bgColor5">
+								<tr class="t3-row-header">
 									<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_general.xml:LGL.title') . '</th>
 									<th>' . $GLOBALS['LANG']->sl('LLL:EXT:lang/locallang_mod_file_list.xml:c_tstamp') . '</th>
 								</tr>
@@ -297,6 +294,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 
 			// put it all together
+			// todo: add action url
 		$out .= '<form action="" method="post">
 					<fieldset class="fields">
 						<legend>' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_wizards.xml:forms_config') . '</legend>';
@@ -470,11 +468,18 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 	 * @return	resource mysql resource
 	 */
 	protected function getRecentResPointer($userId) {
+		$where = 'pages.module="" AND pages.doktype < 200 AND sys_log.userid=' . intval($userId) .
+					$this->logWhere . ' AND ' . $this->taskObject->perms_clause;
+
+			// versioning
+		if (t3lib_extMgm::isLoaded('version')) {
+			$where .= ' AND pages.t3ver_wsid=' . $GLOBALS['BE_USER']->workspace;
+		}
+
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'sys_log.event_pid, MAX(sys_log.tstamp) AS tstamp_MAX',
 			'sys_log INNER JOIN pages ON pages.uid = sys_log.event_pid',
-			'sys_log.userid='.intval($userId) .
-				$this->logWhere . ' AND pages.module="" AND pages.doktype < 200 AND ' . $this->taskObject->perms_clause,
+			$where,
 			 'sys_log.event_pid',
 			 'tstamp_MAX DESC',
 			 $this->numberOfRecent
