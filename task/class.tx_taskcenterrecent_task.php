@@ -213,9 +213,9 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			}
 				// create the query
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'sys_log.*, max(sys_log.tstamp) AS tstamp_MAX',
-				'sys_log,pages',
-				'pages.uid=sys_log.event_pid ' . $this->logWhere .
+				'sys_log.tablename, sys_log.recuid, MAX(sys_log.tstamp) AS tstamp_MAX',
+				'sys_log INNER JOIN pages ON pages.uid = sys_log.event_pid',
+				'1=1' . $this->logWhere .
 				' AND ' . $this->taskObject->perms_clause,
 				'tablename,recuid',
 				'tstamp_MAX DESC',
@@ -471,9 +471,9 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 	 */
 	protected function getRecentResPointer($userId) {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'sys_log.*, max(sys_log.tstamp) AS tstamp_MAX',
-			'sys_log,pages',
-			'pages.uid=event_pid AND sys_log.userid='.intval($userId) .
+			'sys_log.event_pid, MAX(sys_log.tstamp) AS tstamp_MAX',
+			'sys_log INNER JOIN pages ON pages.uid = sys_log.event_pid',
+			'sys_log.userid='.intval($userId) .
 				$this->logWhere . ' AND pages.module="" AND pages.doktype < 200 AND ' . $this->taskObject->perms_clause,
 			 'sys_log.event_pid',
 			 'tstamp_MAX DESC',
