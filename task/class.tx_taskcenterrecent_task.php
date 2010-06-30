@@ -86,7 +86,7 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 			if (is_array($pageRow)) {
 				$path	= t3lib_BEfunc::getRecordPath($pageRow['uid'], $this->taskObject->perms_clause, $GLOBALS['BE_USER']->uc['titleLen']);
 				$title	= htmlspecialchars($path) . ' - ' . t3lib_BEfunc::titleAttribForPages($pageRow, '', 0);
-				$icon	= t3lib_iconworks::getIconImage('pages', $pageRow, $GLOBALS['BACK_PATH'], 'hspace="2" align="top" title="' . $title . '"');
+				$icon	= t3lib_iconworks::getSpriteIconForRecord('pages', $pageRow, array('title' => $title));
 
 				$lines[] = $icon . $this->recent_linkLayoutModule($pageRow['title'], $pageRow['uid']);
 			}
@@ -233,15 +233,12 @@ class tx_taskcenterrecent_task implements tx_taskcenter_Task {
 
 				if (is_array($elRow)) {
 					$path = t3lib_BEfunc::getRecordPath($elRow['pid'], $this->taskObject->perms_clause, $GLOBALS['BE_USER']->uc['titleLen']);
-					$editIcon = t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/edit2.gif', 'width="11" height="12"');
-					$recordIcon = t3lib_iconworks::getIconImage($row['tablename'], $elRow, $GLOBALS['BACK_PATH'], 'class="c-recicon" title="' . htmlspecialchars($path) . '"');
+					$recordIcon = t3lib_iconWorks::getSpriteIconForRecord($row['tablename'], array('title' => htmlspecialchars($path)));
 					$recordTitle = htmlspecialchars($elRow[$GLOBALS['TCA'][$row['tablename']]['ctrl']['label']]);
 					if (empty($recordTitle)) {
 						$recordTitle = '[<em>' . $GLOBALS['LANG']->sL('LLL:EXT:lang/locallang_core.xml:labels.no_title') . '</em>]';
 					}
 					$recordTitle = $this->recent_linkEdit($recordTitle, $row['tablename'], $elRow['uid']);
-
-					$editIcon = t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/i/pages_up.gif', 'width="11" height="12"s');
 					$recordIcon = $this->taskObject->doc->wrapClickMenuOnIcon($recordIcon, $row['tablename'], $row['recuid'], 0);
 
 						// put it all together
