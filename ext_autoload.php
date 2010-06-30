@@ -4,6 +4,7 @@
  *
  * $Id$
  * @version $Id$
+ * @revision $Revision$
  */
 $extensionPath = t3lib_extMgm::extPath('taskcenter_recent');
 return array(
