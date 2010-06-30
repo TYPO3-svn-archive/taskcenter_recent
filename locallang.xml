@@ -10,76 +10,76 @@
     <data type="array">
         <languageKey index="default" type="array">
             <label index="recent_allRecs">Most recently edited records</label>
-            <label index="mod_recent">Recent Pages [+]</label>
+            <label index="mod_recent">Recent Pages</label>
             <label index="link_allRecs">List recently edited records</label>
         </languageKey>
         <languageKey index="dk" type="array">
             <label index="recent_allRecs">Elementer, som er ændret for nyligt</label>
-            <label index="mod_recent">Seneste sider [+]</label>
+            <label index="mod_recent">Seneste sider</label>
         </languageKey>
         <languageKey index="de" type="array">
             <label index="recent_allRecs">Häufig bearbeitete Datensätze</label>
-            <label index="mod_recent">Letzte Seiten [+]</label>
+            <label index="mod_recent">Letzte Seiten</label>
         </languageKey>
         <languageKey index="no" type="array">
             <label index="recent_allRecs">Sist endrede elementer</label>
-            <label index="mod_recent">Siste sider [+]</label>
+            <label index="mod_recent">Siste sider</label>
         </languageKey>
         <languageKey index="it" type="array">
             <label index="recent_allRecs">Record modificati di recente</label>
-            <label index="mod_recent">Pagine modificate di recente [+]</label>
+            <label index="mod_recent">Pagine modificate di recente</label>
         </languageKey>
         <languageKey index="fr" type="array">
             <label index="recent_allRecs">Enregistrements modifiés dernièrement</label>
-            <label index="mod_recent">Pages récentes [+]</label>
+            <label index="mod_recent">Pages récentes</label>
         </languageKey>
         <languageKey index="es" type="array">
             <label index="recent_allRecs">Registros editados mas recientemente</label>
-            <label index="mod_recent">Páginas recientes [+]</label>
+            <label index="mod_recent">Páginas recientes</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="recent_allRecs">Onlangs aangepaste records</label>
-            <label index="mod_recent">Recente pagina's [+]</label>
+            <label index="mod_recent">Recente pagina's</label>
         </languageKey>
         <languageKey index="cz" type="array">
             <label index="recent_allRecs">NAposled editované stránky</label>
-            <label index="mod_recent">Poslední stránky [+]</label>
+            <label index="mod_recent">Poslední stránky</label>
         </languageKey>
         <languageKey index="pl" type="array">
             <label index="recent_allRecs">Ostatnio edytowane rekordy</label>
-            <label index="mod_recent">Ostatnie strony [+]</label>
+            <label index="mod_recent">Ostatnie strony</label>
         </languageKey>
         <languageKey index="si" type="array">
             <label index="recent_allRecs">Nedavno urejani zapisi</label>
-            <label index="mod_recent">Nedavno urejane strani [+]</label>
+            <label index="mod_recent">Nedavno urejane strani</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="recent_allRecs">Viimeksi muotoillut tietueet</label>
-            <label index="mod_recent">Viimeisimmät sivut [+]</label>
+            <label index="mod_recent">Viimeisimmät sivut</label>
         </languageKey>
         <languageKey index="tr" type="array">
             <label index="recent_allRecs">Son zamanlarda düzenlenen kayıtlar</label>
-            <label index="mod_recent">Yakında olmuş Sayfalar [+]</label>
+            <label index="mod_recent">Yakında olmuş Sayfalar</label>
         </languageKey>
         <languageKey index="se" type="array">
             <label index="recent_allRecs">Senast ändrade sidor</label>
-            <label index="mod_recent">Senaste sidor [+]</label>
+            <label index="mod_recent">Senaste sidor</label>
         </languageKey>
         <languageKey index="pt" type="array">
             <label index="recent_allRecs">Registos editados recentemente</label>
-            <label index="mod_recent">Páginas Recentes [+]</label>
+            <label index="mod_recent">Páginas Recentes</label>
         </languageKey>
         <languageKey index="ru" type="array">
             <label index="recent_allRecs">Недавно измененные элементы</label>
-            <label index="mod_recent">Последние страницы [+]</label>
+            <label index="mod_recent">Последние страницы</label>
         </languageKey>
         <languageKey index="sk" type="array">
             <label index="recent_allRecs">Naposledy editované stránky</label>
-            <label index="mod_recent">Posledné stránky [+]</label>
+            <label index="mod_recent">Posledné stránky</label>
         </languageKey>
         <languageKey index="hr" type="array">
             <label index="recent_allRecs">Najskorije izmjenjeni zapisi</label>
-            <label index="mod_recent">Nedavno uređivane stranice [+]</label>
+            <label index="mod_recent">Nedavno uređivane stranice</label>
         </languageKey>
     </data>
 </T3locallang>
